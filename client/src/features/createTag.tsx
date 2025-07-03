@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Button, Input, Card } from "../../components";
-import { TagService } from "../../services/tagService";
-import type { CreateTagRequest, Tag } from "../../services/types";
+import { Button, Input, Card } from "../components";
+import { TagService } from "../services/tagService";
+import type { CreateTagRequest, Tag } from "../services/types";
 
 interface CreateTagPageProps {
   onTagCreated?: (tag: Tag) => void;

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button, Card, Loader } from "../components";
 import { TagService } from "../services/tagService";
 import type { Tag } from "../services/types";
-import CreateTagPage from "../pages/CreateTagPage/CreateTagPage";
+import CreateTagPage from "../features/createTag";
 
 const TagManager: React.FC = () => {
   const [tags, setTags] = useState<Tag[]>([]);

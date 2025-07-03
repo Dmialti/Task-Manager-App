@@ -1,5 +1,5 @@
 import "./App.css";
-import TagManager from "./components/TagManager";
+import TagManager from "./pages/TagManagerPage";
 
 function App() {
   return (
