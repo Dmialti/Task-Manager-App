@@ -3,12 +3,14 @@ import { Button, Card, Loader } from "../components";
 import { TagService } from "../services/tagService";
 import type { Tag } from "../services/types";
 import CreateTagPage from "../features/createTag";
+import EditTagPage from "../features/editTag";
 
 const TagManager: React.FC = () => {
   const [tags, setTags] = useState<Tag[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string>("");
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [editingTag, setEditingTag] = useState<Tag | null>(null);
 
   useEffect(() => {
     loadTags();
@@ -34,6 +36,13 @@ const TagManager: React.FC = () => {
     setShowCreateForm(false);
   };
 
+  const handleTagUpdated = (updatedTag: Tag) => {
+    setTags((prev) =>
+      prev.map((tag) => (tag._id === updatedTag._id ? updatedTag : tag))
+    );
+    setEditingTag(null);
+  };
+
   const handleDeleteTag = async (tagId: string) => {
     try {
       console.log("Deleting tag with ID:", tagId);
@@ -50,6 +59,16 @@ const TagManager: React.FC = () => {
       <CreateTagPage
         onTagCreated={handleTagCreated}
         onBack={() => setShowCreateForm(false)}
+      />
+    );
+  }
+
+  if (editingTag) {
+    return (
+      <EditTagPage
+        tag={editingTag}
+        onTagUpdated={handleTagUpdated}
+        onBack={() => setEditingTag(null)}
       />
     );
   }
@@ -150,6 +169,28 @@ const TagManager: React.FC = () => {
                       <div className="text-sm text-gray-500">{tag.color}</div>
                     </div>
                     <div className="flex items-center space-x-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setEditingTag(tag)}
+                        leftIcon={
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                            />
+                          </svg>
+                        }
+                      >
+                        Редагувати
+                      </Button>
                       <Button
                         variant="ghost"
                         size="sm"
