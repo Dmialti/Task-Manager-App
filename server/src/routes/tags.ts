@@ -1,5 +1,6 @@
 import express from "express";
 import Tag from "../models/Tag";
+import Task from "../models/Task";
 
 const router = express.Router();
 
@@ -44,6 +45,12 @@ router.delete("/:id", async (req, res) => {
       res.status(404).json({ message: "Tag not found" });
       return;
     }
+
+    await Task.updateMany(
+      { tags: req.params.id },
+      { $pull: { tags: req.params.id } }
+    );
+
     res.json({ message: "Tag deleted" });
   } catch (error) {
     res.status(500).json({ message: "Server error", error });

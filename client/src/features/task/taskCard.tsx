@@ -80,20 +80,22 @@ const TaskCard: React.FC<TaskCardProps> = ({
 
                 {task.tags && task.tags.length > 0 && (
                   <div className="flex flex-wrap gap-1">
-                    {task.tags.map((tag) => (
-                      <span
-                        key={tag._id}
-                        className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium"
-                        style={{
-                          backgroundColor: tag.color
-                            ? `${tag.color}20`
-                            : "#f3f4f6",
-                          color: tag.color || "#374151",
-                        }}
-                      >
-                        {tag.name}
-                      </span>
-                    ))}
+                    {task.tags
+                      .filter((tag) => tag !== null)
+                      .map((tag) => (
+                        <span
+                          key={tag._id}
+                          className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium"
+                          style={{
+                            backgroundColor: tag.color
+                              ? `${tag.color}20`
+                              : "#f3f4f6",
+                            color: tag.color || "#374151",
+                          }}
+                        >
+                          {tag.name}
+                        </span>
+                      ))}
                   </div>
                 )}
 

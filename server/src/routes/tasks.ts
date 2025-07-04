@@ -1,5 +1,6 @@
 import express from "express";
 import Task from "../models/Task";
+import Tag from "../models/Tag";
 
 const router = express.Router();
 
@@ -32,19 +33,77 @@ router.get("/", async (req, res) => {
     const skip = (Number(page) - 1) * Number(limit);
 
     const sortOrder = order === "asc" ? 1 : -1;
-    const sortObj: any = {};
-    sortObj[sort as string] = sortOrder;
+    let sortObj: any = {};
 
+    if (sort === "priority") {
+      const priorityOrder = {
+        urgent: 4,
+        high: 3,
+        medium: 2,
+        low: 1,
+      };
+
+      const aggregationPipeline = [
+        { $match: query },
+        {
+          $addFields: {
+            priorityValue: {
+              $switch: {
+                branches: [
+                  { case: { $eq: ["$priority", "urgent"] }, then: 4 },
+                  { case: { $eq: ["$priority", "high"] }, then: 3 },
+                  { case: { $eq: ["$priority", "medium"] }, then: 2 },
+                  { case: { $eq: ["$priority", "low"] }, then: 1 },
+                ],
+                default: 0,
+              },
+            },
+          },
+        },
+        { $sort: { priorityValue: sortOrder as 1 | -1 } },
+        { $skip: skip },
+        { $limit: Number(limit) },
+      ];
+
+      const tasks = await Task.aggregate(aggregationPipeline);
+
+      await Task.populate(tasks, [
+        { path: "category", select: "name" },
+        { path: "tags", select: "name color" },
+      ]);
+
+      const total = await Task.countDocuments(query);
+
+      return res.json({
+        tasks,
+        pagination: {
+          current: Number(page),
+          total: Math.ceil(total / Number(limit)),
+          count: tasks.length,
+          totalItems: total,
+        },
+      });
+    } else {
+      sortObj[sort as string] = sortOrder;
+    }
     const tasks = await Task.find(query)
       .sort(sortObj)
       .skip(skip)
       .limit(Number(limit))
       .populate("category", "name")
       .populate("tags", "name color");
+
+    const tasksWithCleanedTags = tasks.map((task) => {
+      if (task.tags) {
+        task.tags = task.tags.filter((tag) => tag !== null);
+      }
+      return task;
+    });
+
     const total = await Task.countDocuments(query);
 
     res.json({
-      tasks,
+      tasks: tasksWithCleanedTags,
       pagination: {
         current: Number(page),
         total: Math.ceil(total / Number(limit)),
@@ -57,7 +116,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Bulk operations - must come before /:id routes
 router.post("/bulk", async (req, res) => {
   try {
     const tasks = await Task.insertMany(req.body.tasks);
@@ -97,7 +155,6 @@ router.delete("/bulk", async (req, res) => {
   }
 });
 
-// Stats routes - must come before /:id routes
 router.get("/stats/overview", async (req, res) => {
   try {
     const stats = await Task.aggregate([
@@ -194,8 +251,18 @@ router.get("/overdue", async (req, res) => {
 router.get("/priority/:level", async (req, res) => {
   try {
     const { level } = req.params;
-    const tasks = await Task.find({ priority: level });
-    res.json(tasks);
+    const tasks = await Task.find({ priority: level })
+      .populate("category", "name")
+      .populate("tags", "name color");
+
+    const tasksWithCleanedTags = tasks.map((task) => {
+      if (task.tags) {
+        task.tags = task.tags.filter((tag) => tag !== null);
+      }
+      return task;
+    });
+
+    res.json(tasksWithCleanedTags);
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }
@@ -211,6 +278,11 @@ router.get("/:id", async (req, res) => {
       res.status(404).json({ message: "Task not found" });
       return;
     }
+
+    if (task.tags) {
+      task.tags = task.tags.filter((tag) => tag !== null);
+    }
+
     res.json(task);
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
@@ -238,6 +310,11 @@ router.put("/:id", async (req, res) => {
       res.status(404).json({ message: "Task not found" });
       return;
     }
+
+    if (updated.tags) {
+      updated.tags = updated.tags.filter((tag) => tag !== null);
+    }
+
     res.json(updated);
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
@@ -274,7 +351,6 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-// Task-specific actions - must come after /:id but before more specific routes
 router.put("/:id/complete", async (req, res) => {
   try {
     const task = await Task.findByIdAndUpdate(
@@ -353,6 +429,36 @@ router.post("/:id/duplicate", async (req, res) => {
 
     await duplicatedTask.save();
     res.status(201).json(duplicatedTask);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+});
+
+router.post("/cleanup/orphaned-tags", async (req, res) => {
+  try {
+    const existingTagIds = await Tag.find({}, "_id").then((tags: any[]) =>
+      tags.map((tag: any) => tag._id.toString())
+    );
+
+    const tasksWithTags = await Task.find({ tags: { $exists: true, $ne: [] } });
+
+    let updatedTasksCount = 0;
+
+    for (const task of tasksWithTags) {
+      const validTags = task.tags.filter((tagId: any) =>
+        existingTagIds.includes(tagId.toString())
+      );
+
+      if (validTags.length !== task.tags.length) {
+        await Task.findByIdAndUpdate(task._id, { tags: validTags });
+        updatedTasksCount++;
+      }
+    }
+
+    res.json({
+      message: "Orphaned tag references cleaned up",
+      updatedTasks: updatedTasksCount,
+    });
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }
