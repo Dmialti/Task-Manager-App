@@ -29,6 +29,7 @@ const connectToDatabase = async () => {
 
   try {
     cachedConnection = await mongoose.connect(MONGO_URI);
+    console.log("Connected to MongoDB");
     return cachedConnection;
   } catch (error) {
     console.error("DB connection error:", error);
@@ -36,9 +37,21 @@ const connectToDatabase = async () => {
   }
 };
 
-if (MONGO_URI) {
-  connectToDatabase();
-}
+// Middleware to ensure database connection
+app.use(async (req, res, next) => {
+  try {
+    await connectToDatabase();
+    next();
+  } catch (error) {
+    console.error("Failed to connect to database:", error);
+    res.status(500).json({ error: "Database connection failed" });
+  }
+});
+
+// Health check route
+app.get("/", (req, res) => {
+  res.json({ message: "Task Manager API is running", status: "healthy" });
+});
 
 app.use("/api/tasks", tasksRouter);
 app.use("/api/categories", categoriesRouter);
