@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Button, Card, Loader, Dropdown, Input } from "../components";
+import { Button, Card, Loader, Dropdown, Input, Checkbox } from "../components";
 import { TaskService, CategoryService, TagService } from "../services";
 import type { Task, TaskFilters, Category, Tag } from "../services";
 import TaskCard from "../features/task/taskCard";
@@ -137,7 +137,6 @@ const TaskManagerPage: React.FC = () => {
         ids: selectedTasks,
         update: { completed: true },
       });
-      // Перезавантажуємо завдання для отримання актуальних даних
       loadTasks();
       setSelectedTasks([]);
     } catch (err) {
@@ -225,7 +224,6 @@ const TaskManagerPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-gray-900">
           Управління завданнями
@@ -253,7 +251,6 @@ const TaskManagerPage: React.FC = () => {
         </Button>
       </div>
 
-      {/* Filters */}
       <Card className="p-4">
         <div className="flex flex-wrap gap-4 items-center">
           <div className="flex items-center space-x-2">
@@ -327,7 +324,6 @@ const TaskManagerPage: React.FC = () => {
         </div>
       </Card>
 
-      {/* Bulk Actions */}
       {selectedTasks.length > 0 && (
         <Card className="p-4">
           <div className="flex items-center justify-between">
@@ -350,7 +346,6 @@ const TaskManagerPage: React.FC = () => {
         </Card>
       )}
 
-      {/* Error Message */}
       {error && (
         <div className="bg-red-50 border border-red-200 rounded-lg p-4">
           <div className="flex">
@@ -372,7 +367,6 @@ const TaskManagerPage: React.FC = () => {
         </div>
       )}
 
-      {/* Tasks List */}
       {isLoading ? (
         <div className="flex justify-center py-8">
           <Loader size="lg" />
@@ -408,20 +402,14 @@ const TaskManagerPage: React.FC = () => {
             </Card>
           ) : (
             <>
-              {/* Select All */}
               <div className="flex items-center space-x-2 mb-4">
-                <input
-                  type="checkbox"
+                <Checkbox
                   checked={selectedTasks.length === tasks.length}
                   onChange={handleSelectAll}
-                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  label="Вибрати всі завдання"
                 />
-                <label className="text-sm font-medium text-gray-700">
-                  Вибрати всі завдання
-                </label>
               </div>
 
-              {/* Tasks Grid */}
               <div className="grid gap-4">
                 {tasks.map((task) => (
                   <TaskCard
@@ -439,7 +427,6 @@ const TaskManagerPage: React.FC = () => {
                 ))}
               </div>
 
-              {/* Pagination */}
               {pagination.total > 1 && (
                 <div className="flex justify-center space-x-2 mt-6">
                   <Button

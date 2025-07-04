@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Card, Input, Dropdown } from "../../components";
+import { Button, Card, Input, Dropdown, Checkbox } from "../../components";
 import { TaskService } from "../../services";
 import type { Task, UpdateTaskRequest, Category, Tag } from "../../services";
 
@@ -204,18 +204,14 @@ const EditTaskFeature: React.FC<EditTaskFeatureProps> = ({
           )}
 
           <div className="flex items-center space-x-4">
-            <label className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                name="completed"
-                checked={formData.completed}
-                onChange={handleInputChange}
-                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-              />
-              <span className="text-sm font-medium text-gray-700">
-                Завдання завершено
-              </span>
-            </label>
+            <Checkbox
+              name="completed"
+              checked={formData.completed}
+              onChange={(checked) =>
+                setFormData((prev) => ({ ...prev, completed: checked }))
+              }
+              label="Завдання завершено"
+            />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -311,11 +307,10 @@ const EditTaskFeature: React.FC<EditTaskFeatureProps> = ({
             <div className="space-y-2">
               {formData.subtasks?.map((subtask, index) => (
                 <div key={index} className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
+                  <Checkbox
                     checked={subtask.completed}
                     onChange={() => handleToggleSubtask(index)}
-                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    size="sm"
                   />
                   <span
                     className={`flex-1 text-sm ${

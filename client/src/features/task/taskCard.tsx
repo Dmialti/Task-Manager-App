@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Card } from "../../components";
+import { Button, Card, Checkbox } from "../../components";
 import type { Task } from "../../services";
 
 interface TaskCardProps {
@@ -36,22 +36,12 @@ const TaskCard: React.FC<TaskCardProps> = ({
   const isOverdue =
     task.dueDate && new Date(task.dueDate) < new Date() && !task.completed;
 
-  // useEffect(() => {
-  //   console.log("TaskCard rendered for task:", task.tags);
-  // }, [task.tags]);
-
   return (
     <Card className={`p-4 ${isSelected ? "ring-2 ring-blue-500" : ""}`}>
       <div className="flex items-start space-x-3">
         {/* Checkbox */}
-        <input
-          type="checkbox"
-          checked={isSelected}
-          onChange={onSelect}
-          className="mt-1 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-        />
+        <Checkbox checked={isSelected} onChange={onSelect} className="mt-1" />
 
-        {/* Task Content */}
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between">
             <div className="flex-1">
@@ -66,14 +56,12 @@ const TaskCard: React.FC<TaskCardProps> = ({
                 {task.title}
               </h3>
 
-              {/* Description */}
               {task.description && (
                 <p className="text-sm text-gray-600 mt-1 line-clamp-2">
                   {task.description}
                 </p>
               )}
 
-              {/* Meta information */}
               <div className="flex flex-wrap items-center gap-2 mt-2">
                 {/* Priority */}
                 <span
@@ -84,14 +72,12 @@ const TaskCard: React.FC<TaskCardProps> = ({
                   {getPriorityLabel(task.priority)}
                 </span>
 
-                {/* Category */}
                 {task.category && (
                   <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                     {task.category.name}
                   </span>
                 )}
 
-                {/* Tags */}
                 {task.tags && task.tags.length > 0 && (
                   <div className="flex flex-wrap gap-1">
                     {task.tags.map((tag) => (
@@ -111,7 +97,6 @@ const TaskCard: React.FC<TaskCardProps> = ({
                   </div>
                 )}
 
-                {/* Due date */}
                 {task.dueDate && (
                   <span
                     className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
@@ -138,7 +123,6 @@ const TaskCard: React.FC<TaskCardProps> = ({
                 )}
               </div>
 
-              {/* Subtasks progress */}
               {task.subtasks && task.subtasks.length > 0 && (
                 <div className="mt-2">
                   <div className="text-xs text-gray-500">
@@ -161,7 +145,6 @@ const TaskCard: React.FC<TaskCardProps> = ({
                 </div>
               )}
 
-              {/* Created/Updated dates */}
               <div className="flex gap-4 mt-2 text-xs text-gray-400">
                 {task.createdAt && (
                   <span>Створено: {formatDate(task.createdAt)}</span>
@@ -172,7 +155,6 @@ const TaskCard: React.FC<TaskCardProps> = ({
               </div>
             </div>
 
-            {/* Actions */}
             <div className="flex items-center space-x-1 ml-4">
               <Button
                 variant="ghost"
