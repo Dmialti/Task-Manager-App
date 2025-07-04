@@ -1,5 +1,5 @@
 import "./App.css";
-import TagManager from "./pages/TagManagerPage";
+import CategoryManagerPage from "./pages/CategoryManagerPage";
 
 function App() {
   return (
@@ -8,7 +8,7 @@ function App() {
         <h1 className="text-3xl font-bold text-center mb-8">
           Task Manager App
         </h1>
-        <TagManager />
+        <CategoryManagerPage />
       </div>
     </div>
   );

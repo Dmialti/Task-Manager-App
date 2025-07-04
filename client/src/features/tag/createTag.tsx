@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import { Button, Input, Card } from "../components";
-import { TagService } from "../services/tagService";
-import type { CreateTagRequest, Tag } from "../services/types";
+import { Button, Input, Card } from "../../components";
+import { TagService } from "../../services/tagService";
+import type { CreateTagRequest, Tag } from "../../services/types";
 
-interface CreateTagPageProps {
+interface CreateTagFeatureProps {
   onTagCreated?: (tag: Tag) => void;
   onBack?: () => void;
 }
 
-const CreateTagPage: React.FC<CreateTagPageProps> = ({
+const CreateTagFeature: React.FC<CreateTagFeatureProps> = ({
   onTagCreated,
   onBack,
 }) => {
@@ -232,4 +232,4 @@ const CreateTagPage: React.FC<CreateTagPageProps> = ({
   );
 };
 
-export default CreateTagPage;
+export default CreateTagFeature;

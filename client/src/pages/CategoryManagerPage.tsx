@@ -1,74 +1,78 @@
 import React, { useState, useEffect } from "react";
 import { Button, Card, Loader } from "../components";
-import { TagService } from "../services";
-import type { Tag } from "../services";
-import CreateTagFeature from "../features/tag/createTag";
-import EditTagFeature from "../features/tag/editTag";
+import { CategoryService } from "../services";
+import type { Category } from "../services";
+import CreateCategoryFeature from "../features/category/createCategory";
+import EditCategoryFeature from "../features/category/editCategory";
 
-const TagManager: React.FC = () => {
-  const [tags, setTags] = useState<Tag[]>([]);
+const CategoryManager: React.FC = () => {
+  const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string>("");
   const [showCreateForm, setShowCreateForm] = useState(false);
-  const [editingTag, setEditingTag] = useState<Tag | null>(null);
+  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
 
   useEffect(() => {
-    loadTags();
-    console.log("TagManager mounted");
+    loadCategories();
+    console.log(categories);
   }, []);
 
-  const loadTags = async () => {
+  const loadCategories = async () => {
     try {
       setIsLoading(true);
       setError("");
-      const fetchedTags = await TagService.getAllTags();
-      setTags(fetchedTags);
+      const fetchedCategories = await CategoryService.getAllCategories();
+      setCategories(fetchedCategories);
     } catch (err) {
-      console.error("Error loading tags:", err);
-      setError("Помилка при завантаженні тегів");
+      console.error("Error loadin   g categories:", err);
+      setError("Помилка при завантаженні категорій");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleTagCreated = (newTag: Tag) => {
-    setTags((prev) => [...prev, newTag]);
+  const handleCategoryCreated = (newCategory: Category) => {
+    setCategories((prev) => [...prev, newCategory]);
     setShowCreateForm(false);
   };
 
-  const handleTagUpdated = (updatedTag: Tag) => {
-    setTags((prev) =>
-      prev.map((tag) => (tag._id === updatedTag._id ? updatedTag : tag))
+  const handleCategoryUpdated = (updatedCategory: Category) => {
+    setCategories((prev) =>
+      prev.map((category) =>
+        category._id === updatedCategory._id ? updatedCategory : category
+      )
     );
-    setEditingTag(null);
+    setEditingCategory(null);
   };
 
-  const handleDeleteTag = async (tagId: string) => {
+  const handleDeleteCategory = async (categoryId: string) => {
     try {
-      console.log("Deleting tag with ID:", tagId);
-      await TagService.deleteTag(tagId);
-      setTags((prev) => prev.filter((tag) => tag._id !== tagId));
+      console.log("Deleting category with ID:", categoryId);
+      await CategoryService.deleteCategory(categoryId);
+      setCategories((prev) =>
+        prev.filter((category) => category._id !== categoryId)
+      );
     } catch (err) {
-      console.error("Error deleting tag:", err);
-      setError("Помилка при видаленні тегу");
+      console.error("Error deleting category:", err);
+      setError("Помилка при видаленні категорії");
     }
   };
 
   if (showCreateForm) {
     return (
-      <CreateTagFeature
-        onTagCreated={handleTagCreated}
+      <CreateCategoryFeature
+        onCategoryCreated={handleCategoryCreated}
         onBack={() => setShowCreateForm(false)}
       />
     );
   }
 
-  if (editingTag) {
+  if (editingCategory) {
     return (
-      <EditTagFeature
-        tag={editingTag}
-        onTagUpdated={handleTagUpdated}
-        onBack={() => setEditingTag(null)}
+      <EditCategoryFeature
+        category={editingCategory}
+        onCategoryUpdated={handleCategoryUpdated}
+        onBack={() => setEditingCategory(null)}
       />
     );
   }
@@ -76,7 +80,9 @@ const TagManager: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-gray-900">Управління тегами</h2>
+        <h2 className="text-2xl font-bold text-gray-900">
+          Управління категоріями
+        </h2>
         <Button
           variant="primary"
           onClick={() => setShowCreateForm(true)}
@@ -96,7 +102,7 @@ const TagManager: React.FC = () => {
             </svg>
           }
         >
-          Створити тег
+          Створити категорію
         </Button>
       </div>
 
@@ -127,7 +133,7 @@ const TagManager: React.FC = () => {
         </div>
       ) : (
         <div className="grid gap-4">
-          {tags.length === 0 ? (
+          {categories.length === 0 ? (
             <Card className="p-8 text-center">
               <div className="text-gray-400 mb-4">
                 <svg
@@ -140,39 +146,35 @@ const TagManager: React.FC = () => {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth={1}
-                    d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
                   />
                 </svg>
               </div>
               <h3 className="text-lg font-medium text-gray-900 mb-2">
-                Ще немає тегів
+                Ще немає категорій
               </h3>
               <p className="text-gray-600 mb-4">
-                Створіть свій перший тег для організації завдань
+                Створіть свою першу категорію для організації завдань
               </p>
               <Button variant="primary" onClick={() => setShowCreateForm(true)}>
-                Створити перший тег
+                Створити першу категорію
               </Button>
             </Card>
           ) : (
             <div className="grid gap-3">
-              {tags.map((tag) => (
-                <Card key={tag._id} className="p-4">
+              {categories.map((category) => (
+                <Card key={category._id} className="p-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
-                      <span
-                        className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium text-white"
-                        style={{ backgroundColor: tag.color }}
-                      >
-                        {tag.name}
+                      <span className="inline-flex items-center px-0 py-1 rounded-full text-lg font-medium text-black ">
+                        {category.name}
                       </span>
-                      <div className="text-sm text-gray-500">{tag.color}</div>
                     </div>
                     <div className="flex items-center space-x-2">
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => setEditingTag(tag)}
+                        onClick={() => setEditingCategory(category)}
                         leftIcon={
                           <svg
                             className="w-4 h-4"
@@ -194,7 +196,7 @@ const TagManager: React.FC = () => {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => handleDeleteTag(tag._id)}
+                        onClick={() => handleDeleteCategory(category._id)}
                         leftIcon={
                           <svg
                             className="w-4 h-4"
@@ -216,10 +218,10 @@ const TagManager: React.FC = () => {
                     </div>
                   </div>
 
-                  {tag.createdAt && (
+                  {category.createdAt && (
                     <div className="mt-2 text-xs text-gray-400">
                       Створено:{" "}
-                      {new Date(tag.createdAt).toLocaleDateString("uk-UA")}
+                      {new Date(category.createdAt).toLocaleDateString("uk-UA")}
                     </div>
                   )}
                 </Card>
@@ -232,4 +234,4 @@ const TagManager: React.FC = () => {
   );
 };
 
-export default TagManager;
+export default CategoryManager;

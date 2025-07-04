@@ -16,6 +16,21 @@ export interface UpdateTagRequest {
   color?: string;
 }
 
+export interface Category {
+  _id: string;
+  name: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface CreateCategoryRequest {
+  name: string;
+}
+
+export interface UpdateCategoryRequest {
+  name?: string;
+}
+
 export interface ApiResponse<T> {
   success: boolean;
   data: T;

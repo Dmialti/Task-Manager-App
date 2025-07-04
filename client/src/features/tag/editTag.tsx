@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { Button, Card, Input } from "../components";
-import { TagService } from "../services/tagService";
-import type { Tag, UpdateTagRequest } from "../services/types";
+import { Button, Card, Input } from "../../components";
+import { TagService } from "../../services/tagService";
+import type { Tag, UpdateTagRequest } from "../../services/types";
 
-interface EditTagPageProps {
+interface EditTagFeatureProps {
   tag: Tag;
   onTagUpdated: (updatedTag: Tag) => void;
   onBack: () => void;
@@ -26,7 +26,7 @@ const predefinedColors = [
   "#F43F5E",
 ];
 
-const EditTagPage: React.FC<EditTagPageProps> = ({
+const EditTagFeature: React.FC<EditTagFeatureProps> = ({
   tag,
   onTagUpdated,
   onBack,
@@ -207,4 +207,4 @@ const EditTagPage: React.FC<EditTagPageProps> = ({
   );
 };
 
-export default EditTagPage;
+export default EditTagFeature;
