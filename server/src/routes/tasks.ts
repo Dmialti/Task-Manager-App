@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import Task from "../models/Task";
 import Tag from "../models/Tag";
 
@@ -74,7 +74,7 @@ router.get("/", async (req, res) => {
 
       const total = await Task.countDocuments(query);
 
-      return res.json({
+      res.json({
         tasks,
         pagination: {
           current: Number(page),
