@@ -37,7 +37,6 @@ const connectToDatabase = async () => {
   }
 };
 
-// Middleware to ensure database connection
 app.use(async (req, res, next) => {
   try {
     await connectToDatabase();
@@ -48,7 +47,6 @@ app.use(async (req, res, next) => {
   }
 });
 
-// Health check route
 app.get("/", (req, res) => {
   res.json({ message: "Task Manager API is running", status: "healthy" });
 });

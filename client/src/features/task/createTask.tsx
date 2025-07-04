@@ -133,7 +133,7 @@ const CreateTaskFeature: React.FC<CreateTaskFeatureProps> = ({
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      <div className="flex items-center space-x-4">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-4">
         <Button
           variant="ghost"
           onClick={onBack}
@@ -181,9 +181,8 @@ const CreateTaskFeature: React.FC<CreateTaskFeatureProps> = ({
             </div>
           )}
 
-          {/* Basic Information */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="md:col-span-2">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="lg:col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Назва завдання *
               </label>
@@ -197,7 +196,7 @@ const CreateTaskFeature: React.FC<CreateTaskFeatureProps> = ({
               />
             </div>
 
-            <div className="md:col-span-2">
+            <div className="lg:col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Опис
               </label>
@@ -246,7 +245,6 @@ const CreateTaskFeature: React.FC<CreateTaskFeatureProps> = ({
             </div>
           </div>
 
-          {/* Tags */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Теги
@@ -269,7 +267,6 @@ const CreateTaskFeature: React.FC<CreateTaskFeatureProps> = ({
             </div>
           </div>
 
-          {/* Subtasks */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Підзавдання
@@ -290,7 +287,7 @@ const CreateTaskFeature: React.FC<CreateTaskFeatureProps> = ({
                   </Button>
                 </div>
               ))}
-              <div className="flex space-x-2">
+              <div className="flex flex-col sm:flex-row gap-2">
                 <Input
                   type="text"
                   placeholder="Додати підзавдання..."
@@ -307,6 +304,7 @@ const CreateTaskFeature: React.FC<CreateTaskFeatureProps> = ({
                   type="button"
                   variant="secondary"
                   onClick={handleAddSubtask}
+                  className="w-full sm:w-auto"
                 >
                   Додати
                 </Button>
@@ -335,7 +333,7 @@ const CreateTaskFeature: React.FC<CreateTaskFeatureProps> = ({
                   </Button>
                 </div>
               ))}
-              <div className="flex space-x-2">
+              <div className="flex flex-col sm:flex-row gap-2">
                 <textarea
                   placeholder="Додати нотатку..."
                   value={newNote}
@@ -347,6 +345,7 @@ const CreateTaskFeature: React.FC<CreateTaskFeatureProps> = ({
                   type="button"
                   variant="secondary"
                   onClick={handleAddNote}
+                  className="w-full sm:w-auto"
                 >
                   Додати
                 </Button>
@@ -354,8 +353,14 @@ const CreateTaskFeature: React.FC<CreateTaskFeatureProps> = ({
             </div>
           </div>
 
-          <div className="flex justify-end space-x-3">
-            <Button variant="secondary" onClick={onBack} disabled={isLoading}>
+          <div className="flex flex-col sm:flex-row sm:justify-end gap-3">
+            <Button
+              variant="secondary"
+              onClick={onBack}
+              disabled={isLoading}
+              fullWidth={true}
+              className="sm:w-auto"
+            >
               Скасувати
             </Button>
             <Button
@@ -363,6 +368,8 @@ const CreateTaskFeature: React.FC<CreateTaskFeatureProps> = ({
               variant="primary"
               isLoading={isLoading}
               disabled={!formData.title.trim()}
+              fullWidth={true}
+              className="sm:w-auto"
             >
               Створити завдання
             </Button>

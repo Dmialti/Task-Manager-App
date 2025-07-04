@@ -28,7 +28,7 @@ function App() {
   return (
     <div className="min-h-screen bg-gray-100">
       <Navbar currentPage={currentPage} onNavigate={handleNavigate} />
-      <div className="container mx-auto py-8">{renderCurrentPage()}</div>
+      <div className="container mx-auto px-4 py-8">{renderCurrentPage()}</div>
     </div>
   );
 }

@@ -74,11 +74,13 @@ const TagManager: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
         <h2 className="text-2xl font-bold text-gray-900">Управління тегами</h2>
         <Button
           variant="primary"
           onClick={() => setShowCreateForm(true)}
+          fullWidth={true}
+          className="sm:w-auto"
           leftIcon={
             <svg
               className="w-4 h-4"
@@ -157,21 +159,25 @@ const TagManager: React.FC = () => {
             <div className="grid gap-3">
               {tags.map((tag) => (
                 <Card key={tag._id} className="p-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-3">
                       <span
-                        className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium text-white"
+                        className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium text-white break-words"
                         style={{ backgroundColor: tag.color }}
                       >
                         {tag.name}
                       </span>
-                      <div className="text-sm text-gray-500">{tag.color}</div>
+                      <div className="text-sm text-gray-500 break-all">
+                        {tag.color}
+                      </div>
                     </div>
-                    <div className="flex items-center space-x-2">
+                    <div className="flex flex-col sm:flex-row gap-2">
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => setEditingTag(tag)}
+                        fullWidth={true}
+                        className="sm:w-auto"
                         leftIcon={
                           <svg
                             className="w-4 h-4"
@@ -194,6 +200,8 @@ const TagManager: React.FC = () => {
                         variant="ghost"
                         size="sm"
                         onClick={() => handleDeleteTag(tag._id)}
+                        fullWidth={true}
+                        className="sm:w-auto"
                         leftIcon={
                           <svg
                             className="w-4 h-4"

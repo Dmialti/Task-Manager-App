@@ -225,13 +225,15 @@ const TaskManagerPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
         <h2 className="text-2xl font-bold text-gray-900">
           Управління завданнями
         </h2>
         <Button
           variant="primary"
           onClick={() => setShowCreateForm(true)}
+          fullWidth={true}
+          className="sm:w-auto"
           leftIcon={
             <svg
               className="w-4 h-4"
@@ -259,19 +261,27 @@ const TaskManagerPage: React.FC = () => {
 
       {selectedTasks.length > 0 && (
         <Card className="p-4">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <span className="text-sm font-medium text-gray-700">
               Обрано: {selectedTasks.length} завдань
             </span>
-            <div className="flex space-x-2">
+            <div className="flex flex-col sm:flex-row gap-2">
               <Button
                 variant="secondary"
                 size="sm"
                 onClick={handleBulkComplete}
+                fullWidth={true}
+                className="sm:w-auto"
               >
                 Завершити всі
               </Button>
-              <Button variant="danger" size="sm" onClick={handleBulkDelete}>
+              <Button
+                variant="danger"
+                size="sm"
+                onClick={handleBulkDelete}
+                fullWidth={true}
+                className="sm:w-auto"
+              >
                 Видалити всі
               </Button>
             </div>
@@ -361,7 +371,7 @@ const TaskManagerPage: React.FC = () => {
               </div>
 
               {pagination.total > 1 && (
-                <div className="flex justify-center space-x-2 mt-6">
+                <div className="flex flex-wrap justify-center gap-2 mt-6">
                   <Button
                     variant="secondary"
                     size="sm"

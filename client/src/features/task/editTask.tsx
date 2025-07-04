@@ -394,8 +394,14 @@ const EditTaskFeature: React.FC<EditTaskFeatureProps> = ({
             </div>
           </div>
 
-          <div className="flex justify-end space-x-3">
-            <Button variant="secondary" onClick={onBack} disabled={isLoading}>
+          <div className="flex flex-col sm:flex-row sm:justify-end gap-3">
+            <Button
+              variant="secondary"
+              onClick={onBack}
+              disabled={isLoading}
+              fullWidth={true}
+              className="sm:w-auto"
+            >
               Скасувати
             </Button>
             <Button
@@ -403,6 +409,8 @@ const EditTaskFeature: React.FC<EditTaskFeatureProps> = ({
               variant="primary"
               isLoading={isLoading}
               disabled={!formData.title?.trim()}
+              fullWidth={true}
+              className="sm:w-auto"
             >
               Оновити завдання
             </Button>

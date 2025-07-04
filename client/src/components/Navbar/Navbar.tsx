@@ -114,8 +114,11 @@ const Navbar: React.FC<NavbarProps> = ({
                 />
               </svg>
             </div>
-            <span className="text-xl font-bold text-gray-900">
+            <span className="text-xl font-bold text-gray-900 hidden sm:block">
               Task Manager
+            </span>
+            <span className="text-lg font-bold text-gray-900 sm:hidden">
+              TM
             </span>
           </div>
 

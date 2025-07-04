@@ -38,16 +38,17 @@ const TaskCard: React.FC<TaskCardProps> = ({
 
   return (
     <Card className={`p-4 ${isSelected ? "ring-2 ring-blue-500" : ""}`}>
-      <div className="flex items-start space-x-3">
-        {/* Checkbox */}
-        <Checkbox checked={isSelected} onChange={onSelect} className="mt-1" />
+      <div className="flex flex-col sm:flex-row sm:items-start space-y-3 sm:space-y-0 sm:space-x-3">
+        <div className="flex items-center sm:mt-1">
+          <Checkbox checked={isSelected} onChange={onSelect} />
+        </div>
 
         <div className="flex-1 min-w-0">
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
+          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
+            <div className="flex-1 min-w-0">
               {/* Title */}
               <h3
-                className={`text-lg font-medium ${
+                className={`text-lg font-medium break-words ${
                   task.completed
                     ? "line-through text-gray-500"
                     : "text-gray-900"
@@ -57,7 +58,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
               </h3>
 
               {task.description && (
-                <p className="text-sm text-gray-600 mt-1 line-clamp-2">
+                <p className="text-sm text-gray-600 mt-1 break-words">
                   {task.description}
                 </p>
               )}
@@ -85,7 +86,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
                       .map((tag) => (
                         <span
                           key={tag._id}
-                          className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium"
+                          className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium break-all"
                           style={{
                             backgroundColor: tag.color
                               ? `${tag.color}20`
@@ -147,21 +148,27 @@ const TaskCard: React.FC<TaskCardProps> = ({
                 </div>
               )}
 
-              <div className="flex gap-4 mt-2 text-xs text-gray-400">
+              <div className="flex flex-wrap gap-2 mt-2 text-xs text-gray-400">
                 {task.createdAt && (
-                  <span>Створено: {formatDate(task.createdAt)}</span>
+                  <span className="break-all">
+                    Створено: {formatDate(task.createdAt)}
+                  </span>
                 )}
                 {task.completedAt && (
-                  <span>Завершено: {formatDate(task.completedAt)}</span>
+                  <span className="break-all">
+                    Завершено: {formatDate(task.completedAt)}
+                  </span>
                 )}
               </div>
             </div>
 
-            <div className="flex items-center space-x-1 ml-4">
+            <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row gap-2 w-full lg:w-auto">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={onToggle}
+                fullWidth={true}
+                className="sm:w-auto lg:w-full xl:w-auto text-xs"
                 leftIcon={
                   task.completed ? (
                     <svg
@@ -201,6 +208,8 @@ const TaskCard: React.FC<TaskCardProps> = ({
                 variant="ghost"
                 size="sm"
                 onClick={onEdit}
+                fullWidth={true}
+                className="sm:w-auto lg:w-full xl:w-auto text-xs"
                 leftIcon={
                   <svg
                     className="w-4 h-4"
@@ -224,6 +233,8 @@ const TaskCard: React.FC<TaskCardProps> = ({
                 variant="ghost"
                 size="sm"
                 onClick={onDuplicate}
+                fullWidth={true}
+                className="sm:w-auto lg:w-full xl:w-auto text-xs"
                 leftIcon={
                   <svg
                     className="w-4 h-4"
@@ -247,6 +258,8 @@ const TaskCard: React.FC<TaskCardProps> = ({
                 variant="ghost"
                 size="sm"
                 onClick={onDelete}
+                fullWidth={true}
+                className="sm:w-auto lg:w-full xl:w-auto text-xs"
                 leftIcon={
                   <svg
                     className="w-4 h-4"

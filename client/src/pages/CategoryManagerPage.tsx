@@ -78,13 +78,15 @@ const CategoryManager: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
         <h2 className="text-2xl font-bold text-gray-900">
           Управління категоріями
         </h2>
         <Button
           variant="primary"
           onClick={() => setShowCreateForm(true)}
+          fullWidth={true}
+          className="sm:w-auto"
           leftIcon={
             <svg
               className="w-4 h-4"
@@ -163,17 +165,19 @@ const CategoryManager: React.FC = () => {
             <div className="grid gap-3">
               {categories.map((category) => (
                 <Card key={category._id} className="p-4">
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div className="flex items-center space-x-3">
-                      <span className="inline-flex items-center px-0 py-1 rounded-full text-lg font-medium text-black ">
+                      <span className="inline-flex items-center px-0 py-1 rounded-full text-lg font-medium text-black break-words">
                         {category.name}
                       </span>
                     </div>
-                    <div className="flex items-center space-x-2">
+                    <div className="flex flex-col sm:flex-row gap-2">
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => setEditingCategory(category)}
+                        fullWidth={true}
+                        className="sm:w-auto"
                         leftIcon={
                           <svg
                             className="w-4 h-4"
@@ -196,6 +200,8 @@ const CategoryManager: React.FC = () => {
                         variant="ghost"
                         size="sm"
                         onClick={() => handleDeleteCategory(category._id)}
+                        fullWidth={true}
+                        className="sm:w-auto"
                         leftIcon={
                           <svg
                             className="w-4 h-4"

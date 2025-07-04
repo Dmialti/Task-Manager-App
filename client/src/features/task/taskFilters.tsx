@@ -13,8 +13,8 @@ const TaskFiltersFeature: React.FC<TaskFiltersProps> = ({
 }) => {
   return (
     <Card className="p-4">
-      <div className="flex flex-wrap gap-4 items-center">
-        <div className="flex items-center space-x-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="flex flex-col space-y-2">
           <label className="text-sm font-medium text-gray-700">Фільтр:</label>
           <Dropdown
             options={[
@@ -31,7 +31,7 @@ const TaskFiltersFeature: React.FC<TaskFiltersProps> = ({
           />
         </div>
 
-        <div className="flex items-center space-x-2">
+        <div className="flex flex-col space-y-2">
           <label className="text-sm font-medium text-gray-700">
             Сортування:
           </label>
@@ -57,7 +57,7 @@ const TaskFiltersFeature: React.FC<TaskFiltersProps> = ({
           />
         </div>
 
-        <div className="flex items-center space-x-2">
+        <div className="flex flex-col space-y-2">
           <label className="text-sm font-medium text-gray-700">Порядок:</label>
           <Dropdown
             options={[
@@ -71,7 +71,7 @@ const TaskFiltersFeature: React.FC<TaskFiltersProps> = ({
           />
         </div>
 
-        <div className="flex items-center space-x-2">
+        <div className="flex flex-col space-y-2">
           <label className="text-sm font-medium text-gray-700">Пошук:</label>
           <Input
             type="text"
