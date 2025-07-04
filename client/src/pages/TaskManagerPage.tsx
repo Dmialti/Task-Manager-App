@@ -62,7 +62,6 @@ const TaskManagerPage: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log("Loading initial data...");
     const loadData = async () => {
       await loadTasks();
       await loadCategories();

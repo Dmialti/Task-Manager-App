@@ -14,7 +14,6 @@ const TagManager: React.FC = () => {
 
   useEffect(() => {
     loadTags();
-    console.log("TagManager mounted");
   }, []);
 
   const loadTags = async () => {

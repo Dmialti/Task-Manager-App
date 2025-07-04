@@ -51,11 +51,11 @@ const EditTaskFeature: React.FC<EditTaskFeatureProps> = ({
 
       const taskData: UpdateTaskRequest = {
         ...formData,
-        category: formData.category || undefined,
+        category: formData.category || null,
         tags: formData.tags || [],
         dueDate: formData.dueDate || undefined,
-        subtasks: formData.subtasks?.length ? formData.subtasks : undefined,
-        notes: formData.notes?.length ? formData.notes : undefined,
+        subtasks: formData.subtasks?.length ? formData.subtasks : [],
+        notes: formData.notes?.length ? formData.notes : [],
       };
 
       const updatedTask = await TaskService.updateTask(task._id, taskData);
@@ -203,7 +203,6 @@ const EditTaskFeature: React.FC<EditTaskFeatureProps> = ({
             </div>
           )}
 
-          {/* Status */}
           <div className="flex items-center space-x-4">
             <label className="flex items-center space-x-2">
               <input
@@ -217,22 +216,8 @@ const EditTaskFeature: React.FC<EditTaskFeatureProps> = ({
                 Завдання завершено
               </span>
             </label>
-
-            <label className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                name="isArchived"
-                checked={formData.isArchived}
-                onChange={handleInputChange}
-                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-              />
-              <span className="text-sm font-medium text-gray-700">
-                Архівувати завдання
-              </span>
-            </label>
           </div>
 
-          {/* Basic Information */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -279,7 +264,7 @@ const EditTaskFeature: React.FC<EditTaskFeatureProps> = ({
               </label>
               <Dropdown
                 options={categoryOptions}
-                value={formData.category}
+                value={formData.category ?? ""}
                 onChange={(value) => handleDropdownChange("category", value)}
               />
             </div>
@@ -297,7 +282,6 @@ const EditTaskFeature: React.FC<EditTaskFeatureProps> = ({
             </div>
           </div>
 
-          {/* Tags */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Теги
@@ -320,7 +304,6 @@ const EditTaskFeature: React.FC<EditTaskFeatureProps> = ({
             </div>
           </div>
 
-          {/* Subtasks */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Підзавдання
@@ -377,7 +360,6 @@ const EditTaskFeature: React.FC<EditTaskFeatureProps> = ({
             </div>
           </div>
 
-          {/* Notes */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Нотатки

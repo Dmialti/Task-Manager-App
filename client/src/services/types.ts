@@ -95,7 +95,7 @@ export interface UpdateTaskRequest {
   description?: string;
   completed?: boolean;
   priority?: "low" | "medium" | "high" | "urgent";
-  category?: string;
+  category?: string | null;
   tags?: string[];
   dueDate?: string;
   subtasks?: Subtask[];

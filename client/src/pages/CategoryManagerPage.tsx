@@ -14,7 +14,6 @@ const CategoryManager: React.FC = () => {
 
   useEffect(() => {
     loadCategories();
-    console.log(categories);
   }, []);
 
   const loadCategories = async () => {
