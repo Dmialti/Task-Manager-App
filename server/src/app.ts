@@ -9,15 +9,35 @@ import tagsRouter from "./routes/tags";
 dotenv.config();
 
 const app = express();
-app.use(cors());
+
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL || "*",
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 
-// Connect to MongoDB
 const MONGO_URI = process.env.MONGO_URI || "";
+let cachedConnection: typeof mongoose | null = null;
+
+const connectToDatabase = async () => {
+  if (cachedConnection) {
+    return cachedConnection;
+  }
+
+  try {
+    cachedConnection = await mongoose.connect(MONGO_URI);
+    return cachedConnection;
+  } catch (error) {
+    console.error("DB connection error:", error);
+    throw error;
+  }
+};
+
 if (MONGO_URI) {
-  mongoose.connect(MONGO_URI).catch((err) => {
-    console.error("DB connection error:", err);
-  });
+  connectToDatabase();
 }
 
 app.use("/api/tasks", tasksRouter);
