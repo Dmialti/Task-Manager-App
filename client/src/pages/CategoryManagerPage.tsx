@@ -24,7 +24,7 @@ const CategoryManager: React.FC = () => {
       const fetchedCategories = await CategoryService.getAllCategories();
       setCategories(fetchedCategories);
     } catch (err) {
-      console.error("Error loadin   g categories:", err);
+      console.error("Error loading categories:", err);
       setError("Помилка при завантаженні категорій");
     } finally {
       setIsLoading(false);

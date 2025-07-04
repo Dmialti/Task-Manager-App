@@ -57,76 +57,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
-  try {
-    const task = await Task.findById(req.params.id)
-      .populate("category", "name")
-      .populate("tags", "name color");
-    if (!task) {
-      res.status(404).json({ message: "Task not found" });
-      return;
-    }
-    res.json(task);
-  } catch (error) {
-    res.status(500).json({ message: "Server error", error });
-  }
-});
-
-router.post("/", async (req, res) => {
-  try {
-    const task = new Task(req.body);
-    await task.save();
-    res.json(task);
-  } catch (error) {
-    res.status(500).json({ message: "Server error", error });
-  }
-});
-
-router.put("/:id", async (req, res) => {
-  try {
-    const updated = await Task.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    });
-    if (!updated) {
-      res.status(404).json({ message: "Task not found" });
-      return;
-    }
-    res.json(updated);
-  } catch (error) {
-    res.status(500).json({ message: "Server error", error });
-  }
-});
-
-router.patch("/:id", async (req, res) => {
-  try {
-    const updated = await Task.findByIdAndUpdate(
-      req.params.id,
-      { $set: req.body },
-      { new: true, runValidators: true }
-    );
-    if (!updated) {
-      res.status(404).json({ message: "Task not found" });
-      return;
-    }
-    res.json(updated);
-  } catch (error) {
-    res.status(500).json({ message: "Server error", error });
-  }
-});
-
-router.delete("/:id", async (req, res) => {
-  try {
-    const deleted = await Task.findByIdAndDelete(req.params.id);
-    if (!deleted) {
-      res.status(404).json({ message: "Task not found" });
-      return;
-    }
-    res.json({ message: "Deleted" });
-  } catch (error) {
-    res.status(500).json({ message: "Server error", error });
-  }
-});
-
+// Bulk operations - must come before /:id routes
 router.post("/bulk", async (req, res) => {
   try {
     const tasks = await Task.insertMany(req.body.tasks);
@@ -154,6 +85,7 @@ router.put("/bulk", async (req, res) => {
 
 router.delete("/bulk", async (req, res) => {
   try {
+    console.log("Bulk delete IDs:", req.body.ids);
     const { ids } = req.body;
     const result = await Task.deleteMany({ _id: { $in: ids } });
     res.json({
@@ -165,6 +97,7 @@ router.delete("/bulk", async (req, res) => {
   }
 });
 
+// Stats routes - must come before /:id routes
 router.get("/stats/overview", async (req, res) => {
   try {
     const stats = await Task.aggregate([
@@ -220,6 +153,128 @@ router.get("/stats/recent", async (req, res) => {
   }
 });
 
+// Special query routes - must come before /:id routes
+router.get("/due-range", async (req, res) => {
+  try {
+    const { start, end } = req.query;
+
+    if (!start || !end) {
+      res.status(400).json({ message: "Start and end dates are required" });
+      return;
+    }
+
+    const tasks = await Task.find({
+      dueDate: {
+        $gte: new Date(start as string),
+        $lte: new Date(end as string),
+      },
+    }).sort({ dueDate: 1 });
+
+    res.json(tasks);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+});
+
+router.get("/overdue", async (req, res) => {
+  try {
+    const now = new Date();
+    const overdueTasks = await Task.find({
+      dueDate: { $lt: now },
+      completed: false,
+    }).sort({ dueDate: 1 });
+
+    res.json(overdueTasks);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+});
+
+// Priority routes - must come before /:id routes
+router.get("/priority/:level", async (req, res) => {
+  try {
+    const { level } = req.params;
+    const tasks = await Task.find({ priority: level });
+    res.json(tasks);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+});
+
+// Individual task routes - these should come after all specific routes
+router.get("/:id", async (req, res) => {
+  try {
+    const task = await Task.findById(req.params.id)
+      .populate("category", "name")
+      .populate("tags", "name color");
+    if (!task) {
+      res.status(404).json({ message: "Task not found" });
+      return;
+    }
+    res.json(task);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+});
+
+router.post("/", async (req, res) => {
+  try {
+    const task = new Task(req.body);
+    await task.save();
+    res.json(task);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+});
+
+router.put("/:id", async (req, res) => {
+  try {
+    const updated = await Task.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    })
+      .populate("category", "name")
+      .populate("tags", "name color");
+    if (!updated) {
+      res.status(404).json({ message: "Task not found" });
+      return;
+    }
+    res.json(updated);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+});
+
+router.patch("/:id", async (req, res) => {
+  try {
+    const updated = await Task.findByIdAndUpdate(
+      req.params.id,
+      { $set: req.body },
+      { new: true, runValidators: true }
+    );
+    if (!updated) {
+      res.status(404).json({ message: "Task not found" });
+      return;
+    }
+    res.json(updated);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+});
+
+router.delete("/:id", async (req, res) => {
+  try {
+    const deleted = await Task.findByIdAndDelete(req.params.id);
+    if (!deleted) {
+      res.status(404).json({ message: "Task not found" });
+      return;
+    }
+    res.json({ message: "Deleted" });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+});
+
+// Task-specific actions - must come after /:id but before more specific routes
 router.put("/:id/complete", async (req, res) => {
   try {
     const task = await Task.findByIdAndUpdate(
@@ -274,52 +329,6 @@ router.put("/:id/toggle", async (req, res) => {
     );
 
     res.json(updated);
-  } catch (error) {
-    res.status(500).json({ message: "Server error", error });
-  }
-});
-
-router.get("/due-range", async (req, res) => {
-  try {
-    const { start, end } = req.query;
-
-    if (!start || !end) {
-      res.status(400).json({ message: "Start and end dates are required" });
-      return;
-    }
-
-    const tasks = await Task.find({
-      dueDate: {
-        $gte: new Date(start as string),
-        $lte: new Date(end as string),
-      },
-    }).sort({ dueDate: 1 });
-
-    res.json(tasks);
-  } catch (error) {
-    res.status(500).json({ message: "Server error", error });
-  }
-});
-
-router.get("/overdue", async (req, res) => {
-  try {
-    const now = new Date();
-    const overdueTasks = await Task.find({
-      dueDate: { $lt: now },
-      completed: false,
-    }).sort({ dueDate: 1 });
-
-    res.json(overdueTasks);
-  } catch (error) {
-    res.status(500).json({ message: "Server error", error });
-  }
-});
-
-router.get("/priority/:level", async (req, res) => {
-  try {
-    const { level } = req.params;
-    const tasks = await Task.find({ priority: level });
-    res.json(tasks);
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }
