@@ -155,7 +155,7 @@ export const dropdownStyles = {
   label: "block text-sm font-medium text-gray-700 mb-1",
 
   trigger: `
-    relative w-full px-4 py-3 text-left bg-white border-2 border-gray-300 
+    relative w-full pl-4 pr-10 py-3 text-left bg-white border-2 border-gray-300 
     rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 
     focus:border-blue-500 transition-all duration-200
   `,
@@ -168,7 +168,7 @@ export const dropdownStyles = {
   placeholderText: "text-gray-500",
 
   chevron:
-    "absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none",
+    "absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none",
   chevronIcon: "w-5 h-5 text-gray-400 transition-transform duration-200",
   chevronOpen: "transform rotate-180",
 

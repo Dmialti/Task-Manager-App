@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Button, Card, Loader, Dropdown, Input, Checkbox } from "../components";
+import { Button, Card, Loader, Checkbox } from "../components";
 import { TaskService, CategoryService, TagService } from "../services";
 import type { Task, TaskFilters, Category, Tag } from "../services";
-import TaskCard from "../features/task/taskCard";
 import CreateTaskFeature from "../features/task/createTask";
 import EditTaskFeature from "../features/task/editTask";
+import TaskFiltersFeature from "../features/task/taskFilters";
+import TaskCard from "../features/task/taskCard";
 
 const TaskManagerPage: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -251,78 +252,10 @@ const TaskManagerPage: React.FC = () => {
         </Button>
       </div>
 
-      <Card className="p-4">
-        <div className="flex flex-wrap gap-4 items-center">
-          <div className="flex items-center space-x-2">
-            <label className="text-sm font-medium text-gray-700">Фільтр:</label>
-            <Dropdown
-              options={[
-                { value: "", label: "Всі завдання" },
-                { value: "active", label: "Активні" },
-                { value: "completed", label: "Завершені" },
-              ]}
-              value={filters.filter || ""}
-              onChange={(value) =>
-                handleFilterChange({
-                  filter: value as "active" | "completed" | undefined,
-                })
-              }
-            />
-          </div>
-
-          <div className="flex items-center space-x-2">
-            <label className="text-sm font-medium text-gray-700">
-              Сортування:
-            </label>
-            <Dropdown
-              options={[
-                { value: "createdAt", label: "Дата створення" },
-                { value: "updatedAt", label: "Дата оновлення" },
-                { value: "dueDate", label: "Дата виконання" },
-                { value: "priority", label: "Пріоритет" },
-                { value: "title", label: "Назва" },
-              ]}
-              value={filters.sort || "createdAt"}
-              onChange={(value) =>
-                handleFilterChange({
-                  sort: value as
-                    | "createdAt"
-                    | "updatedAt"
-                    | "dueDate"
-                    | "priority"
-                    | "title",
-                })
-              }
-            />
-          </div>
-
-          <div className="flex items-center space-x-2">
-            <label className="text-sm font-medium text-gray-700">
-              Порядок:
-            </label>
-            <Dropdown
-              options={[
-                { value: "desc", label: "Спадання" },
-                { value: "asc", label: "Зростання" },
-              ]}
-              value={filters.order || "desc"}
-              onChange={(value) =>
-                handleFilterChange({ order: value as "asc" | "desc" })
-              }
-            />
-          </div>
-
-          <div className="flex items-center space-x-2">
-            <label className="text-sm font-medium text-gray-700">Пошук:</label>
-            <Input
-              type="text"
-              placeholder="Пошук завдань..."
-              value={filters.search || ""}
-              onChange={(e) => handleFilterChange({ search: e.target.value })}
-            />
-          </div>
-        </div>
-      </Card>
+      <TaskFiltersFeature
+        filters={filters}
+        onFilterChange={handleFilterChange}
+      />
 
       {selectedTasks.length > 0 && (
         <Card className="p-4">

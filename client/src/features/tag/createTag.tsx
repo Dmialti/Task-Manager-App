@@ -140,8 +140,10 @@ const CreateTagFeature: React.FC<CreateTagFeatureProps> = ({
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Назва тегу
+              </label>
               <Input
-                label="Назва тегу"
                 name="name"
                 type="text"
                 value={formData.name}
